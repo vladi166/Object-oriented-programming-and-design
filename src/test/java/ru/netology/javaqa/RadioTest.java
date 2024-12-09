@@ -138,7 +138,7 @@ public class RadioTest {
     @Test
     public void SetTheVolumeAboveTheMax() { //установить громкость выше максимума
         Radio radio = new Radio();
-        radio.setCurrentVolume(100);
+        radio.setCurrentVolume(101);
 
         radio.increaseVolume();
 
@@ -151,7 +151,7 @@ public class RadioTest {
     @Test
     public void SetTheVolumeBelowTheMin() { //установить громкость ниже минимума
         Radio radio = new Radio();
-        radio.setCurrentVolume(0);
+        radio.setCurrentVolume(-1);
 
         radio.decreaseVolume();
 
