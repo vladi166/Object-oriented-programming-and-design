@@ -149,7 +149,7 @@ public class RadioTest {
     }
 
     @Test
-    public void SetTheVolumeBelowTheMin() { //установить громкость выше максимума
+    public void SetTheVolumeBelowTheMin() { //установить громкость ниже минимума
         Radio radio = new Radio();
         radio.setCurrentVolume(0);
 
