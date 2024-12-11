@@ -2,42 +2,61 @@ package ru.netology.javaqa;
 
 public class Radio {
 
-    private int currentRadioStation;
+    private int minRadioStation = 0;
+    private int maxRadioStation = 9;
+    private int currentRadioStation = minRadioStation;
+    private int currentVolume;
+
+    public Radio(int size) {
+        maxRadioStation = minRadioStation + size - 1;
+    }
+
+    public Radio() {
+        this.minRadioStation = minRadioStation;
+        this.maxRadioStation = maxRadioStation;
+        this.currentRadioStation = minRadioStation;
+    }
 
     public int getCurrentRadioStation() {
         return currentRadioStation;
     }
 
+    public int getMinRadioStation() {
+        return minRadioStation;
+    }
+
+    public int getMaxRadioStation() {
+        return maxRadioStation;
+    }
+
+    public int getCurrentVolume() {
+        return currentVolume;
+    }
+
     public void setCurrentRadioStation(int newCurrentRadioStation) {
-        if (newCurrentRadioStation > 9) {
-            newCurrentRadioStation = 0;
+        if (newCurrentRadioStation > maxRadioStation) {
+            newCurrentRadioStation = minRadioStation;
         }
-        if (newCurrentRadioStation < 0) {
-            newCurrentRadioStation = 9;
+        if (newCurrentRadioStation < minRadioStation) {
+            newCurrentRadioStation = maxRadioStation;
         }
         currentRadioStation = newCurrentRadioStation;
     }
 
     public void next() {
-        if (currentRadioStation < 9) {
+        if (currentRadioStation < maxRadioStation) {
             currentRadioStation++;
         } else {
-            currentRadioStation = 0;
+            currentRadioStation = minRadioStation;
         }
     }
 
     public void prev() {
-        if (currentRadioStation > 0) {
+        if (currentRadioStation > minRadioStation) {
             currentRadioStation--;
         } else {
-            currentRadioStation = 9;
+            currentRadioStation = maxRadioStation;
         }
-    }
-
-    private int currentVolume;
-
-    public int getCurrentVolume() {
-        return currentVolume;
     }
 
     public void setCurrentVolume(int newCurrentVolume) {
