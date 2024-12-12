@@ -6,71 +6,19 @@ import org.junit.jupiter.api.Test;
 public class RadioTest {
 
     @Test
-    public void ParametrizedConstructor() { //Параметризованный конструктор
-        Radio radio = new Radio(15);
-
-        Assertions.assertEquals(0, radio.getMinRadioStation());
-        Assertions.assertEquals(14, radio.getMaxRadioStation());
-        Assertions.assertEquals(0, radio.getCurrentVolume());
-    }
-
-    @Test
-    public void UnParametrizedConstructor() {//Непараметризованный конструктор
+    public void GetCurrentRadioStation() {
         Radio radio = new Radio();
 
-        Assertions.assertEquals(0, radio.getMinRadioStation());
-        Assertions.assertEquals(9, radio.getMaxRadioStation());
-        Assertions.assertEquals(0, radio.getCurrentVolume());
-    }
-
-    @Test
-    public void GetCurrentRadioStation() { //номер текущей радиостанции
-        Radio radio = new Radio(15);
-        radio.setCurrentRadioStation(5);
-
-        int expected = 5;
-        int actual = radio.getCurrentRadioStation();
+        int expected = 15;
+        int actual = radio.getSize();
 
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
-    public void switchingTheRadioStationInAcceptableValues() { //переключение станции в допустимых значениях
-        Radio radio = new Radio(15);
-        radio.setCurrentRadioStation(3);
+    public void switchingToTheNextRadioStation() {
+        Radio radio = new Radio(7, 35, 15, 0, 14, 0, 100);
 
-        int expected = 3;
-        int actual = radio.getCurrentRadioStation();
-
-        Assertions.assertEquals(expected, actual);
-    }
-
-    @Test
-    public void switchingTheRadioStationBelowMin() { // переключение радиостанции ниже минимальной
-        Radio radio = new Radio(15);
-        radio.setCurrentRadioStation(-1);
-
-        int expected = 14;
-        int actual = radio.getCurrentRadioStation();
-
-        Assertions.assertEquals(expected, actual);
-    }
-
-    @Test
-    public void switchingTheRadioStationAboveMax() { //переключение станции выше максимальной
-        Radio radio = new Radio(15);
-        radio.setCurrentRadioStation(15);
-
-        int expected = 0;
-        int actual = radio.getCurrentRadioStation();
-
-        Assertions.assertEquals(expected, actual);
-    }
-
-    @Test
-    public void switchingToTheNextRadioStation() { //переключение на следующую радиостанцию
-        Radio radio = new Radio(15);
-        radio.setCurrentRadioStation(7);
         radio.next();
 
         int expected = 8;
@@ -80,21 +28,9 @@ public class RadioTest {
     }
 
     @Test
-    public void switchingToThePrevRadioStation() { //переключение на предыдущую радиостанцию
-        Radio radio = new Radio(15);
-        radio.setCurrentRadioStation(8);
-        radio.prev();
+    public void switchingToTheMinRadioStationWhenExceedingTheMax() {
+        Radio radio = new Radio(14, 35, 15, 0, 14, 0, 100);
 
-        int expected = 7;
-        int actual = radio.getCurrentRadioStation();
-
-        Assertions.assertEquals(expected, actual);
-    }
-
-    @Test
-    public void switchingToTheMinRadioStationWhenExceedingTheMax() { //переключение на минимальную радиостанцию при нажатии кнопки next в максимальном значении
-        Radio radio = new Radio(15);
-        radio.setCurrentRadioStation(14);
         radio.next();
 
         int expected = 0;
@@ -104,9 +40,36 @@ public class RadioTest {
     }
 
     @Test
-    public void switchingToTheMaxRadioStationWhenExceedingTheMin() { //переключение на максимальную радиостанцию при нажатии кнопки prev в минимальном значении
-        Radio radio = new Radio(15);
-        radio.setCurrentRadioStation(0);
+    public void switchingToTheMinRadioStationWhenExceedingTheMaxWithSetter() { // передача через сеттеры
+        Radio radio = new Radio();
+
+        radio.setSize(15);
+        radio.setCurrentRadioStation(14);
+        radio.setMaxRadioStation(14);
+        radio.next();
+
+        int expected = 0;
+        int actual = radio.getCurrentRadioStation();
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void switchingToThePrevRadioStation() {
+        Radio radio = new Radio(8, 35, 15, 0, 14, 0, 100);
+
+        radio.prev();
+
+        int expected = 7;
+        int actual = radio.getCurrentRadioStation();
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void switchingToTheMaxRadioStationWhenExceedingTheMin() {
+        Radio radio = new Radio(0, 35, 15, 0, 14, 0, 100);
+
         radio.prev();
 
         int expected = 14;
@@ -115,48 +78,110 @@ public class RadioTest {
         Assertions.assertEquals(expected, actual);
     }
 
-    // тесты уровня громкости
     @Test
-    public void getCurrentVolume() { //получение текущего уровня громкости
-        Radio radio = new Radio(15);
-        radio.setCurrentVolume(35);
+    public void switchingToTheMaxRadioStationWhenExceedingTheMinWithSetter() { // передача через сеттеры
+        Radio radio = new Radio(0, 35, 15, 0, 14, 0, 100);
 
-        int expected = 35;
-        int actual = radio.getCurrentVolume();
+        radio.setSize(15);
+        radio.setCurrentRadioStation(0);
+        radio.setMinRadioStation(0);
+        radio.prev();
+
+        int expected = 14;
+        int actual = radio.getCurrentRadioStation();
 
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
-    public void turningUpTheVolume() { //прибавление громкости
-        Radio radio = new Radio(15);
-        radio.setCurrentVolume(75);
+    public void switchingTheRadioStationAboveMax() {
+        Radio radio = new Radio(15, 35, 15, 0, 14, 0, 100);
+
+        radio.next();
+
+        int expected = 0;
+        int actual = radio.getCurrentRadioStation();
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void switchingTheRadioStationBelowMin() {
+        Radio radio = new Radio(-1, 35, 15, 0, 14, 0, 100);
+
+        radio.prev();
+
+        int expected = 14;
+        int actual = radio.getCurrentRadioStation();
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void switchingTheRadioStationInAcceptableValues() {
+        Radio radio = new Radio(3, 35, 15, 0, 14, 0, 100);
+
+        int expected = 3;
+        int actual = radio.getCurrentRadioStation();
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void turningUpTheVolume() {
+        Radio radio = new Radio(3, 35, 15, 0, 14, 0, 100);
 
         radio.increaseVolume();
 
-        int expected = 76;
+        int expected = 36;
         int actual = radio.getCurrentVolume();
 
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
-    public void turnDownTheVolume() { //убавление громкости
-        Radio radio = new Radio(15);
-        radio.setCurrentVolume(45);
+    public void turningUpTheVolumeWithSetter() { // передача через сететры
+        Radio radio = new Radio();
+
+        radio.setCurrentVolume(35);
+        radio.setMaxVolume(100);
+        radio.increaseVolume();
+
+        int expected = 36;
+        int actual = radio.getCurrentVolume();
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void turnDownTheVolume() {
+        Radio radio = new Radio(3, 35, 15, 0, 14, 0, 100);
 
         radio.decreaseVolume();
 
-        int expected = 44;
+        int expected = 34;
         int actual = radio.getCurrentVolume();
 
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
-    public void SetTheVolumeAboveTheMax() { //установить громкость выше максимума
-        Radio radio = new Radio(15);
-        radio.setCurrentVolume(101);
+    public void turnDownTheVolumeWithSetter() { // передача данных через сететры
+        Radio radio = new Radio();
+
+        radio.setCurrentVolume(35);
+        radio.setMinVolume(0);
+        radio.decreaseVolume();
+
+        int expected = 34;
+        int actual = radio.getCurrentVolume();
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void SetTheVolumeAboveTheMax() {
+        Radio radio = new Radio(3, 101, 15, 0, 14, 0, 100);
 
         radio.increaseVolume();
 
@@ -167,9 +192,8 @@ public class RadioTest {
     }
 
     @Test
-    public void SetTheVolumeBelowTheMin() { //установить громкость ниже минимума
-        Radio radio = new Radio(15);
-        radio.setCurrentVolume(-1);
+    public void SetTheVolumeBelowTheMin() {
+        Radio radio = new Radio(3, -1, 15, 0, 14, 0, 100);
 
         radio.decreaseVolume();
 
@@ -178,4 +202,5 @@ public class RadioTest {
 
         Assertions.assertEquals(expected, actual);
     }
+
 }
